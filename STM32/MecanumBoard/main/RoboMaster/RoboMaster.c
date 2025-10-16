@@ -7,7 +7,9 @@
 
 #include "RoboMaster.h"
 
+#ifndef PI
 #define PI ((float)M_PI)
+#endif /* PI */
 
 #ifndef MIN
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))

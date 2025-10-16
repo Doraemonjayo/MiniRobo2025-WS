@@ -74,7 +74,7 @@ void can1_transmit(uint32_t id, const uint8_t *data, uint8_t dlc, bool isExtende
 	uint32_t TxMailbox = 0;
 	uint8_t txBuffer[8] = {0};
 
-	dlc = MIN(dlc, 8);
+	if (dlc > 8) return;
 
 	if(isExtended){
 		TxHeader.ExtId = id;
@@ -83,7 +83,7 @@ void can1_transmit(uint32_t id, const uint8_t *data, uint8_t dlc, bool isExtende
 		TxHeader.StdId = id;
 	}
 
-	if (data != NULL && !isRemote) {
+	if (data != NULL && isRemote == false) {
 		memcpy(txBuffer, data, dlc);
 	}
 
@@ -101,7 +101,7 @@ void can2_transmit(uint32_t id, const uint8_t *data, uint8_t dlc, bool isExtende
 	uint32_t TxMailbox = 0;
 	uint8_t txBuffer[8] = {0};
 
-	dlc = MIN(dlc, 8);
+	if (dlc > 8) return;
 
 	if(isExtended){
 		TxHeader.ExtId = id;
@@ -110,7 +110,7 @@ void can2_transmit(uint32_t id, const uint8_t *data, uint8_t dlc, bool isExtende
 		TxHeader.StdId = id;
 	}
 
-	if (data != NULL && !isRemote) {
+	if (data != NULL && isRemote == false) {
 		memcpy(txBuffer, data, dlc);
 	}
 

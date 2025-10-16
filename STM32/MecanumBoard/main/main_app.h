@@ -13,6 +13,8 @@ extern "C" {
 #endif
 
 #include "BoardAPI.h"
+#include "RoboMaster.h"
+#include "Queue.h"
 
 #ifdef __cplusplus
 }

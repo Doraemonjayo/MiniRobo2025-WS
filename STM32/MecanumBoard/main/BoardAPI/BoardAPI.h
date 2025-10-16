@@ -28,6 +28,18 @@ extern "C" {
 #include "BoardAPI/flash.h"
 #include "BoardAPI/irq_nest.h"
 
+#ifndef PI
+#define PI ((float)M_PI)
+#endif /* PI */
+
+#ifndef MIN
+#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
+#endif /* MIN */
+
+#ifndef MAX
+#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
+#endif /* MAX */
+
 #define MECANUM_BOARD
 
 void setup();
