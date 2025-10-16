@@ -3,8 +3,8 @@
 #include <WiFiUDP.h>
 #include "NetworkUdp.h"
 
-#define RX_PIN 21
-#define TX_PIN 22
+#define RX_PIN 26
+#define TX_PIN 27
 
 #define RDATA_SIZE 256
 
@@ -66,8 +66,8 @@ void loop() {
           can_transmit(1, &recdata[1], 8, false, false);
         }
       } else if (recdata[0] == 2) {
-        if (len >= 9) {
-          can_transmit(2, &recdata[1], 8, false, false);
+        if (len >= 5) {
+          can_transmit(2, &recdata[1], 4, false, false);
         }
       }
     }

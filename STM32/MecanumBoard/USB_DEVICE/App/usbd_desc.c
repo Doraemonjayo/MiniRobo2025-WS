@@ -24,7 +24,7 @@
 #include "usbd_conf.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "BoardAPI.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -73,7 +73,10 @@
 #define USB_SIZ_BOS_DESC            0x0C
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
-
+#undef USBD_MANUFACTURER_STRING
+#define USBD_MANUFACTURER_STRING (cdc_getVendorName())
+#undef USBD_PRODUCT_STRING_HS
+#define USBD_PRODUCT_STRING_HS (cdc_getProductName())
 /* USER CODE END PRIVATE_DEFINES */
 
 /**
