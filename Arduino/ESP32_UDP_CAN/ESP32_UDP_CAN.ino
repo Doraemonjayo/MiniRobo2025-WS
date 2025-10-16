@@ -3,8 +3,8 @@
 #include <WiFiUDP.h>
 #include "NetworkUdp.h"
 
-#define RX_PIN 26
-#define TX_PIN 27
+#define RX_PIN 27
+#define TX_PIN 26
 
 #define RDATA_SIZE 256
 
@@ -38,10 +38,14 @@ void setup() {
 
   WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid, pass);
+  Serial.print("Wi-Fi Connecting...");
   while(WiFi.status() != WL_CONNECTED){
     delay(500);
+    Serial.print(".");
   }
   udp.begin(kLocalPort);
+  Serial.println();
+  Serial.println("Wi-Fi Connected");
 
   twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)TX_PIN, (gpio_num_t)RX_PIN, TWAI_MODE_NORMAL);
   twai_timing_config_t t_config = TWAI_TIMING_CONFIG_1MBITS();  //Look in the api-reference for other speed sets.
@@ -54,6 +58,7 @@ void setup() {
     Serial.println("Failed to start driver");
     while (1) delay(1000);
   }
+  Serial.println("OK");
 }
 
 void loop() {
@@ -66,8 +71,8 @@ void loop() {
           can_transmit(1, &recdata[1], 8, false, false);
         }
       } else if (recdata[0] == 2) {
-        if (len >= 5) {
-          can_transmit(2, &recdata[1], 4, false, false);
+        if (len >= 9) {
+          can_transmit(2, &recdata[1], 8, false, false);
         }
       }
     }

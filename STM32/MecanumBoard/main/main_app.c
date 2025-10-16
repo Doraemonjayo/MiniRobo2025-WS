@@ -30,6 +30,8 @@ static void can2_rxCallback(uint32_t id, uint8_t *data, uint8_t dlc, bool isExte
 static void can1_transmitQueue(uint32_t id, const uint8_t *data, uint8_t dlc, bool isExtended, bool isRemote);
 static void can2_transmitQueue(uint32_t id, const uint8_t *data, uint8_t dlc, bool isExtended, bool isRemote);
 
+static CanPacket can2_rxPacket = {0};
+
 void setup() {
 	timer_startUs();
 
@@ -98,6 +100,8 @@ static void task1kHz() {
 	}
 	RoboMaster_transmit(&robomasters);
 
+	gpio_setLedR((tick % 1000 < 500) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+
 	tick++;
 }
 
@@ -106,6 +110,11 @@ static void can1_rxCallback(uint32_t id, uint8_t *data, uint8_t dlc, bool isExte
 }
 
 static void can2_rxCallback(uint32_t id, uint8_t *data, uint8_t dlc, bool isExtended, bool isRemote) {
+	can2_rxPacket.id = id;
+	memcpy(can2_rxPacket.data, data, dlc);
+	can2_rxPacket.dlc = dlc;
+	can2_rxPacket.isExtended = isExtended;
+	can2_rxPacket.isRemote = isRemote;
 	if (id == 1 && dlc == 8 && isExtended == false && isRemote == false) {
 		int16_t wheelSpeeds[4];
 		memcpy(wheelSpeeds, data, 8);
