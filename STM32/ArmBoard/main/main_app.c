@@ -33,6 +33,8 @@ static void can2_transmitQueue(uint32_t id, const uint8_t *data, uint8_t dlc, bo
 static CanPacket can2_rxPacket = {0};
 
 void setup() {
+	gpio_setLedG(GPIO_PIN_SET);
+
 	timer_startUs();
 
 	RoboMasters_setTxFunc(&robomasters, can1_transmitQueue);
@@ -50,9 +52,9 @@ void setup() {
 	{
 		RoboMaster_init(&robomasters.robomaster[i], rmConf);
 		RoboMaster_setCurrentLimit(&robomasters.robomaster[i],
-				-ROBOMASTER_M2006_MAX_CURRENT, ROBOMASTER_M2006_MAX_CURRENT);
+				-0.5f, 0.5f);
 		RoboMaster_setVelocityLimit(&robomasters.robomaster[i],
-				-360.0f * 2.0f * PI, 360.0f * 2.0f * PI); // [rad/s]
+				-36.0f * 2.0f * PI, 36.0f * 2.0f * PI); // [rad/s]
 		RoboMaster_setPositionLimit(&robomasters.robomaster[i],
 				-INFINITY, INFINITY); // [rad]
 	}
@@ -62,15 +64,23 @@ void setup() {
 
 	HAL_Delay(500);
 
-	timer_set1kHzTask(task1kHz);
-	timer_start1kHzTask();
-
 	can1_setReceivedCallback(can1_rxCallback);
 	can2_setReceivedCallback(can2_rxCallback);
 	can1_start(&CAN1_FILTER_DEFAULT);
 	can2_start(&CAN2_FILTER_DEFAULT);
 
+	HAL_Delay(500);
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		RoboMaster_resetZeroPosition(&robomasters.robomaster[i]);
+	}
+
+	timer_set1kHzTask(task1kHz);
+	timer_start1kHzTask();
+
 	UNUSED(can2_transmitQueue);
+
+	gpio_setLedG(GPIO_PIN_RESET);
 }
 
 void loop() {
@@ -115,11 +125,11 @@ static void can2_rxCallback(uint32_t id, uint8_t *data, uint8_t dlc, bool isExte
 	can2_rxPacket.dlc = dlc;
 	can2_rxPacket.isExtended = isExtended;
 	can2_rxPacket.isRemote = isRemote;
-	if (id == 1 && dlc == 8 && isExtended == false && isRemote == false) {
-		int16_t wheelSpeeds[4];
-		memcpy(wheelSpeeds, data, 8);
-		for (uint8_t i = 0; i < 4; i++) {
-			RoboMaster_setTargetVelocity(&robomasters.robomaster[i], wheelSpeeds[i] / 32768.0f * 36.0f * 2.0f * PI);
+	if (id == 2 && dlc == 8 && isExtended == false && isRemote == false) {
+		float armPositions[2];
+		memcpy(armPositions, data, 8);
+		for (uint8_t i = 0; i < 2; i++) {
+			RoboMaster_setTargetTrapezoid(&robomasters.robomaster[i], armPositions[i] * 36.0f * 2.0f * PI);
 		}
 	}
 }
