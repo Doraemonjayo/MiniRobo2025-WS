@@ -119,7 +119,7 @@ static void can2_rxCallback(uint32_t id, uint8_t *data, uint8_t dlc, bool isExte
 		int16_t wheelSpeeds[4];
 		memcpy(wheelSpeeds, data, 8);
 		for (uint8_t i = 0; i < 4; i++) {
-			RoboMaster_setTargetVelocity(&robomasters.robomaster[i], wheelSpeeds[i] / 32768.0f * 36.0f * 2.0f * PI);
+			RoboMaster_setTargetVelocity(&robomasters.robomaster[i], 2.0f * wheelSpeeds[i] / 32768.0f * 36.0f * 2.0f * PI);
 		}
 	}
 }

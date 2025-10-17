@@ -40,17 +40,30 @@ while True:
     ltrigger = (joystick.get_axis(4) + 1) / 2
     rtrigger = (joystick.get_axis(5) + 1) / 2
 
-    wheels[0] = int(32767 * (0.4 * lstick[0] + 0.4 * lstick[1] + 0.2 * rstick[0]))  # fl
-    wheels[1] = int(32767 * -(-0.4 * lstick[0] + 0.4 * lstick[1] - 0.2 * rstick[0]))  # fr
-    wheels[2] = int(32767 * (-0.4 * lstick[0] + 0.4 * lstick[1] + 0.2 * rstick[0]))  # bl
-    wheels[3] = int(32767 * -(0.4 * lstick[0] + 0.4 * lstick[1] - 0.2 * rstick[0]))  # br
-    arms[0] = ltrigger / 8
-    arms[1] = rtrigger / 8
+    wheels[0] = int(32767 * (0.3 * lstick[0] + 0.3 * lstick[1] + 0.4 * rstick[0]))  # fl
+    wheels[1] = int(32767 * -(-0.3 * lstick[0] + 0.3 * lstick[1] - 0.4 * rstick[0]))  # fr
+    wheels[2] = int(32767 * (-0.3 * lstick[0] + 0.3 * lstick[1] + 0.4 * rstick[0]))  # bl
+    wheels[3] = int(32767 * -(0.3 * lstick[0] + 0.3 * lstick[1] - 0.4 * rstick[0]))  # br
+    # arms[0] = -ltrigger / 4 * 1.0
+    # arms[1] = rtrigger / 4
+
+    if joystick.get_button(0) == 1:
+        arms[0] = 0
+    elif joystick.get_button(1) == 1:
+        arms[0] = -0.125
+    elif joystick.get_button(3) == 1:
+        arms[0] = -0.28
+
+    if joystick.get_button(4) == 1:
+        arms[1] = 0
+    elif joystick.get_button(5) == 1:
+        arms[1] = 0.2
 
     data = struct.pack("<Bhhhh", 1, wheels[0], wheels[1], wheels[2], wheels[3])
     sock.sendto(data, target)
+    time.sleep(0.01)
     data = struct.pack("<Bff", 2, arms[0], arms[1])
     sock.sendto(data, target)
+    time.sleep(0.01)
 
     print(wheels, arms)
-    time.sleep(0.01)

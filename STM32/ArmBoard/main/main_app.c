@@ -52,12 +52,14 @@ void setup() {
 	{
 		RoboMaster_init(&robomasters.robomaster[i], rmConf);
 		RoboMaster_setCurrentLimit(&robomasters.robomaster[i],
-				-0.5f, 0.5f);
+				-1.0f, 1.0f);
 		RoboMaster_setVelocityLimit(&robomasters.robomaster[i],
 				-36.0f * 2.0f * PI, 36.0f * 2.0f * PI); // [rad/s]
 		RoboMaster_setPositionLimit(&robomasters.robomaster[i],
 				-INFINITY, INFINITY); // [rad]
 	}
+
+	RoboMaster_setCurrentLimit(&robomasters.robomaster[0], -ROBOMASTER_M2006_MAX_CURRENT, ROBOMASTER_M2006_MAX_CURRENT);
 
 	Queue_init(&can1_txQueue, can1_txBuffer, sizeof(CanPacket), CAN_QUEUE_CAPACITY, 0, disable_irq_nest, enable_irq_nest);
 	Queue_init(&can2_txQueue, can2_txBuffer, sizeof(CanPacket), CAN_QUEUE_CAPACITY, 0, disable_irq_nest, enable_irq_nest);
