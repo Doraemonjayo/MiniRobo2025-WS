@@ -40,7 +40,7 @@ extern "C" {
 #define MAX(a, b)  (((a) > (b)) ? (a) : (b))
 #endif /* MAX */
 
-#define MECANUM_BOARD
+#define ARM_BOARD
 
 void setup();
 void loop();
