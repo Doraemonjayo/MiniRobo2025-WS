@@ -46,8 +46,7 @@ void setup() {
 	rmConf.trapezoidAcceleration = 36.0f * 2.0f * PI;
 	rmConf.trapezoidMaxAcceleration = rmConf.trapezoidAcceleration * 1.5f;
 	rmConf.trapezoidDeadband = PI / 8.0f;
-	for (uint8_t i = 0; i < 8; i++)
-	{
+	for (uint8_t i = 0; i < 8; i++) {
 		RoboMaster_init(&robomasters.robomaster[i], rmConf);
 		RoboMaster_setCurrentLimit(&robomasters.robomaster[i],
 				-ROBOMASTER_M2006_MAX_CURRENT, ROBOMASTER_M2006_MAX_CURRENT);
@@ -57,8 +56,8 @@ void setup() {
 				-INFINITY, INFINITY); // [rad]
 	}
 
-	Queue_init(&can1_txQueue, can1_txBuffer, sizeof(CanPacket), CAN_QUEUE_CAPACITY, 0, disable_irq_nest, enable_irq_nest);
-	Queue_init(&can2_txQueue, can2_txBuffer, sizeof(CanPacket), CAN_QUEUE_CAPACITY, 0, disable_irq_nest, enable_irq_nest);
+	Queue_init(&can1_txQueue, can1_txBuffer, sizeof(CanPacket), CAN_QUEUE_CAPACITY, false, disable_irq_nest, enable_irq_nest);
+	Queue_init(&can2_txQueue, can2_txBuffer, sizeof(CanPacket), CAN_QUEUE_CAPACITY, false, disable_irq_nest, enable_irq_nest);
 
 	HAL_Delay(500);
 
@@ -75,17 +74,13 @@ void setup() {
 
 void loop() {
 	CanPacket canPacket;
-	if (Queue_size(&can1_txQueue) > 0 && can1_txAvailable() > 0)
-	{
-		if (Queue_pop(&can1_txQueue, &canPacket) == 0)
-		{
+	if (Queue_size(&can1_txQueue) > 0 && can1_txAvailable() > 0) {
+		if (Queue_pop(&can1_txQueue, &canPacket) == 0) {
 			can1_transmit(canPacket.id, canPacket.data, canPacket.dlc, canPacket.isExtended, canPacket.isRemote);
 		}
 	}
-	if (Queue_size(&can2_txQueue) > 0 && can2_txAvailable() > 0)
-	{
-		if (Queue_pop(&can2_txQueue, &canPacket) == 0)
-		{
+	if (Queue_size(&can2_txQueue) > 0 && can2_txAvailable() > 0) {
+		if (Queue_pop(&can2_txQueue, &canPacket) == 0) {
 			can2_transmit(canPacket.id, canPacket.data, canPacket.dlc, canPacket.isExtended, canPacket.isRemote);
 		}
 	}
@@ -94,8 +89,7 @@ void loop() {
 static void task1kHz() {
 	static uint32_t tick = 0;
 
-	for (uint8_t i = 0; i < 8; i++)
-	{
+	for (uint8_t i = 0; i < 8; i++) {
 		RoboMaster_calculateOutputCurrent(&robomasters.robomaster[i]);
 	}
 	RoboMaster_transmit(&robomasters);
