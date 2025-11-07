@@ -4,7 +4,7 @@ import socket
 import struct
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-target = ("192.168.137.5", 8000)
+target = ("192.168.3.10", 8000)
 
 pygame.init()
 pygame.joystick.init()

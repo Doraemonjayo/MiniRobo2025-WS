@@ -8,11 +8,11 @@
 
 #define RDATA_SIZE 256
 
-const char *ssid = "DoradoraPC";
+const char *ssid = "raptor";
 const char *pass = "12345678";
 
-IPAddress ip(192, 168, 137, 5);
-IPAddress gateway(192, 168, 137, 1);
+IPAddress ip(192, 168, 3, 10);
+IPAddress gateway(192, 168, 3, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 int kLocalPort = 8000;
